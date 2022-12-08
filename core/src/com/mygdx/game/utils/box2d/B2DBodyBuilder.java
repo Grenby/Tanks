@@ -3,13 +3,13 @@ package com.mygdx.game.utils.box2d;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Disposable;
+import com.mygdx.game.utils.MyLogger;
 
 public class B2DBodyBuilder{
 
     public static final B2DBodyBuilder instance = new B2DBodyBuilder();
 
-    private static final String tag = B2DBodyBuilder.class.getSimpleName();
+    private static final String TAG = B2DBodyBuilder.class.getSimpleName();
     private Body body = null;
 
     private B2DBodyBuilder() {
@@ -21,7 +21,9 @@ public class B2DBodyBuilder{
     }
 
     public B2DBodyBuilder addFixture(FixtureDefParam param) {
-        if (this.body == null) throw new NullPointerException("BodyDef isn't created yet");
+        if (this.body == null){
+            MyLogger.LOG.error(TAG,"BodyDef isn't created yet",new NullPointerException("Body is null"));
+        }
         param.mFixtureDef.shape = param.mShape;
         body.createFixture(param.mFixtureDef);
         //body.createFixture()
@@ -30,8 +32,10 @@ public class B2DBodyBuilder{
     }
 
     public Body build() {
-        if (body == null) throw new NullPointerException("BodyDef isn't created yeе");
-        Gdx.app.log(tag, "create new " + body.getType());
+        if (this.body == null){
+            MyLogger.LOG.error(TAG,"BodyDef isn't created yet",new NullPointerException("Body is null"));
+        }
+        MyLogger.LOG.info(TAG,"create new " + body.getType());
         Body result = this.body;
         this.body = null;
         return result;
